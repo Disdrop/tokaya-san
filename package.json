@@ -1,0 +1,16 @@
+{
+  "name": "tokaya-chan",
+  "version": "1.0.0",
+  "description": "A Discord bot for the Tokaya Discord server!",
+  "main": "app.js",
+  "scripts": {
+    "start": "ts-node ./src/app.ts"
+  },
+  "type": "module",
+  "author": "Yuna",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.1"
+  }
+}
