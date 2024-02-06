@@ -132,4 +132,4 @@ dist
 
 # Old Stuff
 src-old/
-src/old.js
+old.js

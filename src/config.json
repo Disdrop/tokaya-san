@@ -1,0 +1,11 @@
+{
+  "serverId": "",
+  "modules": {
+    "general": true,
+    "level": false,
+    "moderation": false,
+    "support": false,
+    "voice": false,
+    "welcome": false
+  }
+}
