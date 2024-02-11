@@ -6,27 +6,26 @@ import {
 import { TokayaClient } from "../tokaya-client";
 
 export interface Config {
-  serverId: string;
-  modules: {
-    general: boolean;
-    level: boolean;
-    moderation: boolean;
-    support: boolean;
-    voice: boolean;
-    welcome: boolean;
+  readonly serverId: string;
+  readonly botId: string;
+  readonly modules: {
+    readonly general: boolean;
+    readonly level: boolean;
+    readonly moderation: boolean;
+    readonly support: boolean;
+    readonly voice: boolean;
+    readonly welcome: boolean;
   };
 }
 
-export interface Module {
-  commands: Command[];
-  functions: {};
+interface commandOptions {
+  client: TokayaClient;
+  interaction: CommandInteraction;
 }
+
+type commandFunction = (options: commandOptions) => void;
 
 export interface Command {
   data: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder;
-}
-
-interface executeOptions {
-  client: TokayaClient;
-  interaction: CommandInteraction;
+  command: commandFunction;
 }

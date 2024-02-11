@@ -76,6 +76,36 @@ create-channel
 delete-channel
 ```
 
+### Level
+
+```
+Commands
+---
+
+Functions
+---
+```
+
+### Welcome
+
+```
+Commands
+---
+
+Functions
+---
+```
+
+### Support
+
+```
+Commands
+---
+
+Functions
+---
+```
+
 ## Standard embed object
 
 ```js

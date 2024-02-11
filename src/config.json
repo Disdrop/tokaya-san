@@ -1,5 +1,6 @@
 {
   "serverId": "",
+  "botId": "",
   "modules": {
     "general": true,
     "level": false,
