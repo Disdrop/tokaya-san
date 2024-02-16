@@ -6,16 +6,25 @@ import {
   RESTPostAPIChatInputApplicationCommandsJSONBody,
   REST,
   Routes,
-  ActivityType,
 } from "discord.js";
 import { config as dotenv } from "dotenv";
-import { readdir, readFile, readFileSync } from "node:fs";
-import { Command, Config } from "./lib/types";
+import { readFileSync } from "node:fs";
+import { Command, Config, Data } from "./lib/types";
+import modules from "./modules/modules";
 
 export class TokayaClient extends Client {
-  commands = new Collection();
+  modules = modules;
+  commands: Collection<string, Command> = new Collection();
   commandsData: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
   readonly config: Config | null = null;
+  data: Data = {
+    general: null,
+    level: null,
+    moderation: null,
+    support: null,
+    voice: null,
+    welcome: null,
+  };
 
   constructor() {
     super({
@@ -34,6 +43,13 @@ export class TokayaClient extends Client {
     } catch (error) {
       console.error('Fehler beim Lesen der "config.json" Datei:', error);
     }
+
+    // Read 'data.json' file
+    try {
+      this.data = JSON.parse(readFileSync("./src/data.json", "utf8")) as Data;
+    } catch (error) {
+      console.error('Fehler beim Lesen der "data.json" Datei:', error);
+    }
   }
 
   async start() {
@@ -51,34 +67,56 @@ export class TokayaClient extends Client {
     });
 
     // Load modules
-    readdir("./src/modules", (err, folders) => {
-      if (err) return console.error(err);
-      folders.forEach((folder) => {
+    for (const moduleName in modules) {
+      if (moduleName in modules) {
+        const module = modules[moduleName as keyof typeof modules];
+
         // Checking if the module is enabled
-        if (this.config!.modules![folder as keyof typeof this.config.modules] === false) return;
+        if (this.config!.modules![moduleName as keyof typeof this.config.modules] === true) {
+          // Start events
+          for (const eventName in module.events) {
+            if (eventName in module.events) {
+              const event = module.events[eventName as keyof typeof module.events];
+              event.eventFunction(this);
+            }
+          }
 
-        // Start module (Unfinished)
-        const module = import(`./modules/${folder}/index.ts`);
+          // Load commands
+          for (const commandName in module.commands) {
+            if (commandName in module.commands) {
+              const command = module.commands[commandName as keyof typeof module.commands];
+              this.commands.set(command.data.name, command);
+              this.commandsData.push(command.data.toJSON());
+            }
+          }
 
-        // Load commands
-        readdir(`./src/modules/${folder}/commands`, (err, files) => {
-          if (err) return console.error(err);
-          files.forEach(async (file) => {
-            if (!file.endsWith(".js")) return;
-            const command: Command = await import(`../modules/${folder}/commands/${file}`);
-            this.commands.set(command.data.name, command);
-            this.commandsData.push(command.data.toJSON());
+          // Start commands
+          this.on(Events.InteractionCreate, async (interaction) => {
+            if (!interaction.isChatInputCommand()) return;
+            const command: Command | undefined = this.commands.get(interaction.commandName);
+            if (!command) return;
+            try {
+              command.execute(this, interaction);
+            } catch (error) {
+              if (interaction.replied || interaction.deferred) {
+                await interaction.followUp({
+                  content: "There was an error while executing this command!",
+                  ephemeral: true,
+                });
+              } else {
+                await interaction.reply({
+                  content: "There was an error while executing this command!",
+                  ephemeral: true,
+                });
+              }
+            }
           });
-          console.log(`[${folder}] Es wurden ${files.length} commands geladen.`);
-        });
 
-        // Load functions
-
-        // Start module
-
-        console.log(`[loadModules] Es wurde das Modul "${folder}" geladen.`);
-      });
-    });
+          // Start module
+          module.startModule(this);
+        }
+      }
+    }
 
     // Register Commands
     const rest = new REST().setToken(process.env.TOKEN as string);
@@ -86,48 +124,10 @@ export class TokayaClient extends Client {
       await rest.put(Routes.applicationGuildCommands(this.config.botId, this.config.serverId), {
         body: this.commandsData,
       });
-      console.log(`Successfully reloaded ${this.commandsData.length} application (/) commands.`);
+      console.log(`[Discord] Reloaded ${this.commandsData.length} slashcommands.`);
     } catch (error) {
       console.error(error);
     }
-
-    // Start commands
-    /*
-    this.on(Events.InteractionCreate, async (interaction) => {
-      if (!interaction.isChatInputCommand()) return;
-      const command = interaction.client.commands.get(interaction.commandName);
-      if (!command) return;
-      try {
-        await command.execute(this.modules[command.moduleName], interaction);
-      } catch (error) {
-        if (interaction.replied || interaction.deferred) {
-          await interaction.followUp({
-            content: "There was an error while executing this command!",
-            ephemeral: true,
-          });
-        } else {
-          await interaction.reply({
-            content: "There was an error while executing this command!",
-            ephemeral: true,
-          });
-        }
-      }
-    });
-    */
-
-    // Set activity
-    this.on("ready", () => {
-      if (!this.user) return;
-      console.log(`[Discord] Online als ${this.user.tag}`);
-      (async () => {
-        const guild = this.guilds.cache.get(this.config!.serverId);
-        if (!guild) return;
-        setInterval(() => {
-          if (!this.user) return;
-          this.user.setActivity(`${guild.memberCount} User`, { type: ActivityType.Listening });
-        }, 50000);
-      })();
-    });
 
     // Login
     super.login(process.env.TOKEN).then(() => {

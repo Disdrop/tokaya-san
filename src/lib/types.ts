@@ -18,14 +18,25 @@ export interface Config {
   };
 }
 
-interface commandOptions {
-  client: TokayaClient;
-  interaction: CommandInteraction;
+export interface Data {
+  readonly general: any;
+  readonly level: any;
+  readonly moderation: any;
+  readonly support: any;
+  readonly voice: any;
+  readonly welcome: any;
 }
 
-type commandFunction = (options: commandOptions) => void;
+type execute = (client: TokayaClient, interaction: CommandInteraction) => void;
 
 export interface Command {
+  moduleName: string;
   data: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder;
-  command: commandFunction;
+  execute: execute;
+}
+
+type eventFunction = (client: TokayaClient) => void;
+
+export interface BotEvent {
+  eventFunction: eventFunction;
 }
