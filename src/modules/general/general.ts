@@ -1,5 +1,6 @@
 import { TokayaClient } from "../../tokaya-client";
 import ping from "./commands/ping";
+import help from "./commands/help";
 import ready from "./events/ready";
 
 function startModule(client: TokayaClient) {
@@ -10,6 +11,7 @@ const general = {
   startModule,
   commands: {
     ping,
+    help,
   },
   events: {
     ready,

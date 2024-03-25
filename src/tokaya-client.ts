@@ -11,9 +11,11 @@ import { config as dotenv } from "dotenv";
 import { readFileSync } from "node:fs";
 import { Command, Config, Data } from "./lib/types";
 import modules from "./modules/modules";
+import { embeds } from "./lib/embeds";
 
 export class TokayaClient extends Client {
   modules = modules;
+  embeds = embeds;
   commands: Collection<string, Command> = new Collection();
   commandsData: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
   readonly config: Config | null = null;

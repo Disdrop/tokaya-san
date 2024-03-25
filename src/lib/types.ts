@@ -27,16 +27,29 @@ export interface Data {
   readonly welcome: any;
 }
 
+// Commands
 type execute = (client: TokayaClient, interaction: CommandInteraction) => void;
-
 export interface Command {
-  moduleName: string;
   data: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder;
   execute: execute;
 }
 
+// Events
 type eventFunction = (client: TokayaClient) => void;
-
 export interface BotEvent {
   eventFunction: eventFunction;
 }
+
+// Embeds
+export interface Field {
+  name: string;
+  value: string;
+  inline: boolean;
+}
+
+// Help embed
+interface helpPropsObj {
+  name: string;
+  discription: string;
+}
+export type helpProps = null | helpPropsObj;
