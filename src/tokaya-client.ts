@@ -6,6 +6,10 @@ import {
   RESTPostAPIChatInputApplicationCommandsJSONBody,
   REST,
   Routes,
+  ActionRowBuilder,
+  BaseSelectMenuBuilder,
+  StringSelectMenuBuilder,
+  StringSelectMenuOptionBuilder,
 } from "discord.js";
 import { config as dotenv } from "dotenv";
 import { readFileSync } from "node:fs";
@@ -34,7 +38,6 @@ export class TokayaClient extends Client {
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent,
       ],
     });
     dotenv();

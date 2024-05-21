@@ -15,7 +15,7 @@ const help: Command = {
     for (const moduleName in client.modules) {
       options.push(
         new StringSelectMenuOptionBuilder()
-          .setLabel(moduleName.charAt(0).toUpperCase() + moduleName.slice(1))
+          .setLabel(client.modules[moduleName as keyof typeof client.modules].title)
           .setValue(moduleName)
       );
     }
@@ -25,12 +25,11 @@ const help: Command = {
       .addOptions(...options);
     const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(select);
     const msg = await interaction.reply({
-      embeds: [client.embeds.help(null, client)],
+      embeds: [client.embeds.generalHelp(null, client)],
       components: [row],
-      //ephemeral: true,
       fetchReply: true,
     });
-    console.log(msg.id, msg.channelId);
+    console.log(msg.channelId, msg.id);
   },
 };
 

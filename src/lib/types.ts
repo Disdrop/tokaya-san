@@ -47,9 +47,9 @@ export interface Field {
   inline: boolean;
 }
 
-// Help embed
-interface helpPropsObj {
+// General Help embed
+interface generalHelpPropsObj {
   name: string;
   discription: string;
 }
-export type helpProps = null | helpPropsObj;
+export type generalHelpProps = null | generalHelpPropsObj;

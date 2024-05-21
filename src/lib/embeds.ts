@@ -1,11 +1,11 @@
+import { SlashCommandSubcommandBuilder, User } from "discord.js";
 import { TokayaClient } from "../tokaya-client";
-import { Command, Field, helpProps } from "./types";
+import { Field, generalHelpProps } from "./types";
 
-const emptyImgUrl =
-  "https://cdn.discordapp.com/attachments/870398764190433281/1112077320757452827/echidna.png";
+const emptyImgUrl = "https://iili.io/JiC00TF.png";
 
 // General
-function help(data: helpProps, client: TokayaClient) {
+function generalHelp(data: generalHelpProps, client: TokayaClient) {
   if (!data)
     return {
       color: 0x5865f2,
@@ -19,11 +19,24 @@ function help(data: helpProps, client: TokayaClient) {
   for (const commandName in commands) {
     if (commandName in commands) {
       const command = commands[commandName as keyof typeof commands];
-      fields.push({
-        name: `\`/${command.data.name}\``,
-        value: command.data.description,
-        inline: false,
-      });
+      const slashCommands = command.data.options.filter(
+        (option) => option instanceof SlashCommandSubcommandBuilder
+      );
+      if (slashCommands.length === 0) {
+        fields.push({
+          name: `\`/${command.data.name}\``,
+          value: command.data.description,
+          inline: false,
+        });
+      } else {
+        slashCommands.forEach((slashCommand) => {
+          fields.push({
+            name: `\`/${command.data.name} ${slashCommand["name" as keyof typeof slashCommand]}\``,
+            value: `${slashCommand["description" as keyof typeof slashCommand]}`,
+            inline: false,
+          });
+        });
+      }
     }
   }
   return {
@@ -36,4 +49,116 @@ function help(data: helpProps, client: TokayaClient) {
   };
 }
 
-export const embeds = { help };
+async function generalInfoUser(user: User, client: TokayaClient) {
+  const member = client.guilds.cache.get(client.config!.serverId)?.members.cache.get(user.id);
+  if (member) {
+    return [
+      {
+        color: 0x5865f2,
+        description: "",
+        image: {
+          url: user.bannerURL({ extension: "webp", size: 4096 }) as string,
+        },
+      },
+      {
+        color: 0x5865f2,
+        description: `# User <@${user.id}>
+      - Displayname: **\`${user.displayName}\`**
+      - Username: **\`${user.tag}\`**
+      - Nickname: **\`${member.nickname ? member.nickname : "`-`"}\`**
+      - User ID: **\`${user.id}\`**
+      - Is member: **${member.joinedTimestamp ? "`yes`" : "`no`"}**
+      - User type: **${member.user.bot ? "`Bot" : "`User"}${
+          (await member.guild.fetchOwner()).id === member.id ? " (Server Owner)`" : "`"
+        }**
+      - Global avatar: **${
+        user.avatarURL({ extension: "webp", size: 1024 })
+          ? "[gif](" +
+            user.avatarURL({ extension: "gif", size: 1024 }) +
+            ") / [png](" +
+            user.avatarURL({ extension: "png", size: 1024 }) +
+            ")"
+          : "`-`"
+      }**
+      - Server avatar: **${
+        member.avatarURL({ extension: "webp", size: 1024 })
+          ? "[gif](" +
+            member.avatarURL({ extension: "gif", size: 1024 }) +
+            ") / [png](" +
+            member.avatarURL({ extension: "png", size: 1024 }) +
+            ")"
+          : "`-`"
+      }**
+      - Global banner: **${
+        user.bannerURL({ extension: "webp", size: 4096 })
+          ? "[gif](" +
+            user.bannerURL({ extension: "gif", size: 4096 }) +
+            ") / [png](" +
+            user.bannerURL({ extension: "png", size: 4096 }) +
+            ")"
+          : "`-`"
+      }**
+      - Joined: **${
+        member.joinedTimestamp ? `<t:${Math.round(member.joinedTimestamp / 1000)}>` : "`-`"
+      }**
+      - Created: **<t:${Math.round(user.createdTimestamp / 1000)}>**`,
+        thumbnail: {
+          url: member.avatarURL({ extension: "webp" })
+            ? (member.avatarURL({ extension: "webp" }) as string)
+            : (user.avatarURL({ extension: "webp" }) as string),
+        },
+        image: {
+          url: emptyImgUrl,
+        },
+      },
+    ];
+  }
+  return [
+    {
+      color: 0x5865f2,
+      description: "",
+      image: {
+        url: user.bannerURL({ extension: "webp", size: 4096 }) as string,
+      },
+    },
+    {
+      color: 0x5865f2,
+      description: `# User <@${user.id}>
+    - Displayname: **\`${user.displayName}\`**
+    - Username: **\`${user.tag}\`**
+    - Nickname: **\`-\`**
+    - User ID: **\`${user.id}\`**
+    - Is member: **\`no\`**
+    - User type: **${user.bot ? "`Bot`" : "`User`"}**
+    - Global avatar: **${
+      user.avatarURL({ extension: "webp", size: 1024 })
+        ? "[gif](" +
+          user.avatarURL({ extension: "gif", size: 1024 }) +
+          ") / [png](" +
+          user.avatarURL({ extension: "png", size: 1024 }) +
+          ")"
+        : "`-`"
+    }**
+    - Server avatar: **\`-\`**
+    - Global banner: **${
+      user.bannerURL({ extension: "webp", size: 4096 })
+        ? "[gif](" +
+          user.bannerURL({ extension: "gif", size: 4096 }) +
+          ") / [png](" +
+          user.bannerURL({ extension: "png", size: 4096 }) +
+          ")"
+        : "`-`"
+    }**
+    - Joined: **\`-\`**
+    - Created: **<t:${Math.round(user.createdTimestamp / 1000)}>**`,
+      thumbnail: {
+        url: user.avatarURL({ extension: "webp" }) as string,
+      },
+      image: {
+        url: emptyImgUrl,
+      },
+    },
+  ];
+}
+
+export const embeds = { generalHelp, generalInfoUser };

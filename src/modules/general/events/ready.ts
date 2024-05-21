@@ -1,5 +1,5 @@
-import { ActivityType, Events, SlashCommandBuilder } from "discord.js";
-import { BotEvent, Command } from "../../../lib/types";
+import { ActivityType, Events } from "discord.js";
+import { BotEvent } from "../../../lib/types";
 
 const ready: BotEvent = {
   async eventFunction(client) {

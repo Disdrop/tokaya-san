@@ -53,7 +53,6 @@ timeout
 ```
 Commands
 ---
-/voice help
 /voice admin add
 /voice admin remove
 /voice kick
@@ -141,3 +140,7 @@ const embed = {
 
 export { embed };
 ```
+
+# Test Server
+
+id: `"1111492325319909467",`
