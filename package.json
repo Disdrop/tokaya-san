@@ -10,7 +10,7 @@
   "author": "Yuna",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^14.15.2",
+    "discord.js": "^14.15.3",
     "dotenv": "^16.4.5"
   }
 }

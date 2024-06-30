@@ -24,6 +24,11 @@ const helpInteraction: BotEvent = {
                   .setValue(option.value)
                   .setDefault(true);
               }
+              if (option.default) {
+                return new StringSelectMenuOptionBuilder()
+                  .setLabel(option.label)
+                  .setValue(option.value);
+              }
               return option;
             })
           )

@@ -13,23 +13,27 @@ const help: Command = {
   async execute(client, interaction) {
     const options: StringSelectMenuOptionBuilder[] = [];
     for (const moduleName in client.modules) {
-      options.push(
-        new StringSelectMenuOptionBuilder()
-          .setLabel(client.modules[moduleName as keyof typeof client.modules].title)
-          .setValue(moduleName)
-      );
+      if (
+        client.config &&
+        client.config!.modules![moduleName as keyof typeof client.config.modules] === true
+      ) {
+        options.push(
+          new StringSelectMenuOptionBuilder()
+            .setLabel(client.modules[moduleName as keyof typeof client.modules].title)
+            .setValue(moduleName)
+        );
+      }
     }
     const select = new StringSelectMenuBuilder()
       .setCustomId("helpmoduleselector")
       .setPlaceholder("Select a module!")
       .addOptions(...options);
     const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(select);
-    const msg = await interaction.reply({
+    await interaction.reply({
       embeds: [client.embeds.generalHelp(null, client)],
       components: [row],
       fetchReply: true,
     });
-    console.log(msg.channelId, msg.id);
   },
 };
 

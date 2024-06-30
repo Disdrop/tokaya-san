@@ -10,10 +10,12 @@ import {
   BaseSelectMenuBuilder,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
+  Guild,
+  ActivityType,
 } from "discord.js";
 import { config as dotenv } from "dotenv";
-import { readFileSync } from "node:fs";
-import { Command, Config, Data } from "./lib/types";
+import { readFileSync, writeFileSync } from "node:fs";
+import { Command, Config, Data, BotEvent } from "./lib/types";
 import modules from "./modules/modules";
 import { embeds } from "./lib/embeds";
 
@@ -30,6 +32,7 @@ export class TokayaClient extends Client {
     support: null,
     voice: null,
     welcome: null,
+    guilds: null,
   };
 
   constructor() {
@@ -57,6 +60,16 @@ export class TokayaClient extends Client {
     }
   }
 
+  // Write data to 'data.json' file
+  async write() {
+    try {
+      const jsonData = JSON.stringify(this.data, null, 2);
+      writeFileSync("./src/data.json", jsonData, "utf8");
+    } catch (error) {
+      console.error('Fehler beim Lesen der "data.json" Datei:', error);
+    }
+  }
+
   async start() {
     if (!this.config) {
       console.error('"config" ist null');
@@ -71,68 +84,84 @@ export class TokayaClient extends Client {
       console.log("client error:", error);
     });
 
-    // Load modules
-    for (const moduleName in modules) {
-      if (moduleName in modules) {
-        const module = modules[moduleName as keyof typeof modules];
+    this.on(Events.ClientReady, async (client) => {
+      if (!this.config || !this.user) return;
+      console.log(`[Discord] Online als ${client.user.tag}`);
+      (async () => {
+        if (!this.config) return;
+        const guild = this.guilds.cache.get(this.config.serverId);
+        if (!guild) return;
+        setInterval(() => {
+          if (!this.user) return;
+          this.user.setActivity(`${guild.memberCount} User`, { type: ActivityType.Listening });
+        }, 50000);
+      })();
 
-        // Checking if the module is enabled
-        if (this.config!.modules![moduleName as keyof typeof this.config.modules] === true) {
-          // Start events
-          for (const eventName in module.events) {
-            if (eventName in module.events) {
-              const event = module.events[eventName as keyof typeof module.events];
-              event.eventFunction(this);
-            }
-          }
+      // Load modules
+      for (const moduleName in modules) {
+        if (moduleName in modules) {
+          const module = modules[moduleName as keyof typeof modules];
 
-          // Load commands
-          for (const commandName in module.commands) {
-            if (commandName in module.commands) {
-              const command = module.commands[commandName as keyof typeof module.commands];
-              this.commands.set(command.data.name, command);
-              this.commandsData.push(command.data.toJSON());
-            }
-          }
-
-          // Start commands
-          this.on(Events.InteractionCreate, async (interaction) => {
-            if (!interaction.isChatInputCommand()) return;
-            const command: Command | undefined = this.commands.get(interaction.commandName);
-            if (!command) return;
-            try {
-              command.execute(this, interaction);
-            } catch (error) {
-              if (interaction.replied || interaction.deferred) {
-                await interaction.followUp({
-                  content: "There was an error while executing this command!",
-                  ephemeral: true,
-                });
-              } else {
-                await interaction.reply({
-                  content: "There was an error while executing this command!",
-                  ephemeral: true,
-                });
+          // Checking if the module is enabled
+          if (this.config.modules[moduleName as keyof typeof this.config.modules] === true) {
+            // Start events
+            for (const eventName in module.events) {
+              if (eventName in module.events) {
+                const event = module.events[eventName as keyof typeof module.events] as BotEvent;
+                event.eventFunction(this);
               }
             }
-          });
 
-          // Start module
-          module.startModule(this);
+            // Load commands
+            for (const commandName in module.commands) {
+              if (commandName in module.commands) {
+                const command = module.commands[
+                  commandName as keyof typeof module.commands
+                ] as Command;
+                this.commands.set(command.data.name, command);
+                this.commandsData.push(command.data.toJSON());
+              }
+            }
+
+            // Start commands
+            this.on(Events.InteractionCreate, async (interaction) => {
+              if (!interaction.isChatInputCommand()) return;
+              const command: Command | undefined = this.commands.get(interaction.commandName);
+              if (!command) return;
+              try {
+                command.execute(this, interaction);
+              } catch (error) {
+                if (interaction.replied || interaction.deferred) {
+                  await interaction.followUp({
+                    content: "There was an error while executing this command!",
+                    ephemeral: true,
+                  });
+                } else {
+                  await interaction.reply({
+                    content: "There was an error while executing this command!",
+                    ephemeral: true,
+                  });
+                }
+              }
+            });
+
+            // Start module
+            module.startModule(this);
+          }
         }
       }
-    }
 
-    // Register Commands
-    const rest = new REST().setToken(process.env.TOKEN as string);
-    try {
-      await rest.put(Routes.applicationGuildCommands(this.config.botId, this.config.serverId), {
-        body: this.commandsData,
-      });
-      console.log(`[Discord] Reloaded ${this.commandsData.length} slashcommands.`);
-    } catch (error) {
-      console.error(error);
-    }
+      // Register Commands
+      const rest = new REST().setToken(process.env.TOKEN as string);
+      try {
+        await rest.put(Routes.applicationGuildCommands(this.config.botId, this.config.serverId), {
+          body: this.commandsData,
+        });
+        console.log(`[Discord] Reloaded ${this.commandsData.length} slashcommands.`);
+      } catch (error) {
+        console.error(error);
+      }
+    });
 
     // Login
     super.login(process.env.TOKEN).then(() => {

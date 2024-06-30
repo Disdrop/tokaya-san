@@ -16,15 +16,19 @@ export interface Config {
     readonly voice: boolean;
     readonly welcome: boolean;
   };
+  readonly welcome: {
+    readonly saveroles: boolean;
+  };
 }
 
 export interface Data {
-  readonly general: any;
-  readonly level: any;
-  readonly moderation: any;
-  readonly support: any;
-  readonly voice: any;
-  readonly welcome: any;
+  general: any;
+  level: any;
+  moderation: any;
+  support: any;
+  voice: any;
+  welcome: any;
+  guilds: any;
 }
 
 // Commands

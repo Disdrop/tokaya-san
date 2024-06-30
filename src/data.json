@@ -4,5 +4,15 @@
   "moderation": null,
   "support": null,
   "voice": null,
-  "welcome": null
+  "welcome": {
+    "866044524349095996": {
+      "welcomeChannelId": "1254021462730211359",
+      "mainChannelId": "1232652453195943987"
+    },
+    "1111492325319909467": {
+      "welcomeChannelId": "1253624413564440628",
+      "mainChannelId": "1204232133141467148"
+    }
+  },
+  "guilds": null
 }

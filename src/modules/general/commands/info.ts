@@ -36,6 +36,11 @@ const info: Command = {
         });
         break;
       case "server":
+        if (!interaction.guild) return;
+        interaction.reply({
+          embeds: await client.embeds.generalInfoServer(await interaction.guild.fetch(), client),
+          fetchReply: true,
+        });
         break;
     }
   },
