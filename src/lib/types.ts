@@ -15,6 +15,7 @@ export interface Config {
     readonly support: boolean;
     readonly voice: boolean;
     readonly welcome: boolean;
+    readonly sport: boolean;
   };
   readonly welcome: {
     readonly saveroles: boolean;
@@ -29,6 +30,7 @@ export interface Data {
   voice: any;
   welcome: any;
   guilds: any;
+  sport: any;
 }
 
 // Commands

@@ -1,4 +1,12 @@
-import { Guild, GuildMember, SlashCommandSubcommandBuilder, User } from "discord.js";
+import {
+  ChannelType,
+  Guild,
+  GuildMember,
+  GuildVerificationLevel,
+  PermissionsBitField,
+  SlashCommandSubcommandBuilder,
+  User,
+} from "discord.js";
 import { TokayaClient } from "../tokaya-client";
 import { Command, Field, generalHelpProps } from "./types";
 
@@ -172,10 +180,70 @@ async function generalInfoUser(user: User, client: TokayaClient) {
 }
 
 async function generalInfoServer(guild: Guild, client: TokayaClient) {
+  let threads = guild.channels.fetchActiveThreads();
+  let threadCount = await threads.then((fetched) => fetched.threads.size);
+  let channels = guild.channels.fetch();
+  let members = guild.members.fetch();
+  let owner = await guild.fetchOwner();
+  let botCount = (await members).filter((member) => member.user.bot);
+  let modMembers = (await members).filter(
+    (member) =>
+      (member.permissions.has(PermissionsBitField.Flags.BanMembers) ||
+        member.permissions.has(PermissionsBitField.Flags.KickMembers) ||
+        member.permissions.has(PermissionsBitField.Flags.ModerateMembers) ||
+        member.permissions.has(PermissionsBitField.Flags.DeafenMembers) ||
+        member.permissions.has(PermissionsBitField.Flags.MuteMembers) ||
+        member.permissions.has(PermissionsBitField.Flags.ManageChannels) ||
+        member.permissions.has(PermissionsBitField.Flags.ManageRoles) ||
+        member.permissions.has(PermissionsBitField.Flags.Administrator) ||
+        member.permissions.has(PermissionsBitField.Flags.ManageGuild) ||
+        member.permissions.has(PermissionsBitField.Flags.ManageWebhooks) ||
+        member.permissions.has(PermissionsBitField.Flags.ManageNicknames) ||
+        member.permissions.has(PermissionsBitField.Flags.ManageMessages)) &&
+      !member.user.bot &&
+      member.id != owner.id
+  );
+  let modMentions = modMembers.map((member) => `    - <@${member.id}>`).join("\n");
+  let roles = guild.roles.fetch();
   let info = {
     color: 0x5865f2,
     description: `# Server "${guild.name}"
-      - Server Owner: <@${(await guild.fetchOwner()).id}>`,
+        - Server owner: <@${(await owner).id}>
+        - Server ID: **\`${guild.id}\`**
+        - Creation date: **<t:${Math.round(guild.createdTimestamp / 1000)}>**
+        - Member count: **\`${guild.memberCount}\`**
+          - Humans: **\`${guild.memberCount - botCount.size}\`**
+          - Bots: **\`${botCount.size}\`**
+        - Total channel count: **\`${guild.channels.channelCountWithoutThreads + threadCount}\`**
+          - Text channel count: **\`${
+            (await channels).filter((channel) => channel?.type === ChannelType.GuildText).size
+          }\`**
+          - Voice channel count: **\`${
+            (await channels).filter((channel) => channel?.type === ChannelType.GuildVoice).size
+          }\`**
+          - Category channel count: **\`${
+            (await channels).filter((channel) => channel?.type === ChannelType.GuildCategory).size
+          }\`**
+          - Annoucement channel count: **\`${
+            (await channels).filter((channel) => channel?.type === ChannelType.GuildAnnouncement)
+              .size
+          }\`**
+          - Stage voice channel count: **\`${
+            (await channels).filter((channel) => channel?.type === ChannelType.GuildStageVoice).size
+          }\`**
+          - Forum channel count: **\`${
+            (await channels).filter((channel) => channel?.type === ChannelType.GuildForum).size
+          }\`**
+          - Media channel count: **\`${
+            (await channels).filter((channel) => channel?.type === ChannelType.GuildMedia).size
+          }\`**
+          - Active thread channel count: **\`${threadCount}\`**
+        - Role count: **\`${await roles.then((fetched) => fetched.size)}\`**
+        - Server boost count: **\`${guild.premiumSubscriptionCount}\`**
+        - Server boost tier: **\`${guild.premiumTier}\`**
+        - Verification Level: **\`${guild.verificationLevel}\`**
+        - Members with moderative rights:
+        ${modMentions}`,
     thumbnail: {
       url: guild.iconURL({ extension: "webp" }) as string,
     },
@@ -228,7 +296,7 @@ function welcomeChannelMain(member: GuildMember, client: TokayaClient) {
     `Willkommen an Bord, <@${member.id}>! Unser letzter Held... naja, du machst das schon besser.`,
     `Servus <@${member.id}>! Bereit, deine 99 Leben zu verlieren?`,
     `Hey <@${member.id}>, willkommen in unserer Community! Ignorier die Geister, die sind harmlos.`,
-    `Ahoy <@${member.id}>! Wir hoffen du ertrinkst uns nicht wie der vor dir.`,
+    `Ahoy <@${member.id}>! Wir hoffen du ertrinkst nicht, wie der vor dir.`,
   ];
   return [
     {

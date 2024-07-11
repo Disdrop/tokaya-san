@@ -2,12 +2,13 @@
   "serverId": "866044524349095996",
   "botId": "1138481259039965206",
   "modules": {
-    "general": false,
+    "general": true,
     "level": false,
     "moderation": false,
     "support": false,
     "voice": false,
-    "welcome": false
+    "welcome": true,
+    "sport": false
   },
   "welcome": {
     "saveroles": false

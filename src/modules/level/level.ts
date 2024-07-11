@@ -1,4 +1,4 @@
-import { Guild, TextChannel, User } from "discord.js";
+import { Guild, TextChannel, User, userMention } from "discord.js";
 import { TokayaClient } from "../../tokaya-client";
 import pointsOnMessage from "./events/pointsOnMessage";
 
@@ -7,7 +7,7 @@ function startModule(client: TokayaClient) {
 }
 
 function addPoints(member: User, guild: Guild, client: TokayaClient, points: number) {
-  if (!client.config) return;
+  if (!client.config || member.bot) return;
   if (!client.data.guilds) {
     client.data.guilds = {
       [guild.id]: {
