@@ -1,6 +1,5 @@
 import { TokayaClient } from "../../tokaya-client";
 import sportCommands from "./commands/sport-commands";
-import { Events, spoiler } from "discord.js";
 
 async function startModule(client: TokayaClient) {
   console.log('Starting "sport" module');

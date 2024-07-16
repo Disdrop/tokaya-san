@@ -19,7 +19,6 @@ const info: Command = {
       subcommand.setName("server").setDescription("Info about the server")
     ),
   async execute(client, interaction) {
-    if (!interaction.isChatInputCommand()) return;
     switch (interaction.options.getSubcommand()) {
       case "user":
         const user = await interaction.options.getUser("user")?.fetch();

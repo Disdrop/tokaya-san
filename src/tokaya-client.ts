@@ -33,6 +33,7 @@ export class TokayaClient extends Client {
     voice: null,
     welcome: null,
     guilds: null,
+    sport: null,
   };
 
   constructor() {
@@ -41,6 +42,7 @@ export class TokayaClient extends Client {
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildVoiceStates,
       ],
     });
     dotenv();

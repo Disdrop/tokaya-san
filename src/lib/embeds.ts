@@ -1,8 +1,8 @@
 import {
   ChannelType,
+  ChatInputCommandInteraction,
   Guild,
   GuildMember,
-  GuildVerificationLevel,
   PermissionsBitField,
   SlashCommandSubcommandBuilder,
   User,
@@ -11,6 +11,29 @@ import { TokayaClient } from "../tokaya-client";
 import { Command, Field, generalHelpProps } from "./types";
 
 const emptyImgUrl = "https://iili.io/JiC00TF.png";
+
+function error(name: string, description: string) {
+  return [
+    {
+      color: 0xed4245,
+      description: `# Error: ${name}\n${description}`,
+      image: {
+        url: emptyImgUrl,
+      },
+    },
+  ];
+}
+function success(name: string, description: string) {
+  return [
+    {
+      color: 0x57f287,
+      description: `# Succsess: ${name}\n${description}`,
+      image: {
+        url: emptyImgUrl,
+      },
+    },
+  ];
+}
 
 // General
 function generalHelp(data: generalHelpProps, client: TokayaClient) {
@@ -67,7 +90,6 @@ async function generalInfoUser(user: User, client: TokayaClient) {
     },
   };
   if (member) {
-    console.log(member.roles.cache.map((role) => role).length);
     let rolesString = member?.roles.cache
       .map((role) => {
         return { id: `    - <@&${role.id}>\n`, position: role.position };
@@ -320,11 +342,27 @@ function levelUp(level: string) {
   ];
 }
 
+function logEntry(interaction: ChatInputCommandInteraction) {
+  return [
+    {
+      color: 0xff0000,
+      description: `## ${interaction.options.getSubcommand()}
+        - Banned User: **<@${interaction.options.getUser("user")?.id}>**
+        - Banned by: **<@${interaction.user.id}>**
+        - Reason: \`${interaction.options.getString("reason")}\`
+        - Timestamp: **<t:${Math.round(Date.now() / 1000)}>**`,
+    },
+  ];
+}
+
 export const embeds = {
+  error,
+  success,
   generalHelp,
   generalInfoUser,
   generalInfoServer,
   welcomeChannel,
   welcomeChannelMain,
   levelUp,
+  logEntry,
 };

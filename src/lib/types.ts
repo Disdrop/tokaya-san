@@ -1,7 +1,7 @@
 import {
   SlashCommandBuilder,
   SlashCommandSubcommandsOnlyBuilder,
-  CommandInteraction,
+  ChatInputCommandInteraction,
 } from "discord.js";
 import { TokayaClient } from "../tokaya-client";
 
@@ -34,7 +34,7 @@ export interface Data {
 }
 
 // Commands
-type execute = (client: TokayaClient, interaction: CommandInteraction) => void;
+type execute = (client: TokayaClient, interaction: ChatInputCommandInteraction) => void;
 export interface Command {
   data: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder;
   execute: execute;

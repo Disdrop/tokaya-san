@@ -20,12 +20,12 @@ Commands
 ```
 Commands
 ---
-/kick
-/ban
-/tempban
-/unban
-/timeout
-/removetimeout
+/user kick
+/user ban
+/user tempban
+/user unban
+/user timeout
+/user removetimeout
 /message delete
 /channel lock
 /channel unlock
@@ -33,9 +33,15 @@ Commands
 /server unlock
 /logchannel set
 /logchannel unset
+/modrole set
+/modrole unset
 /addroleall
 
-Functions
+modrole command Perms
+
+Desto mehr Banns desto mehr Zustimmmungen aus dem Team braucht man.
+
+Log Channel Functions
 ---
 message-delete
 message-edit
@@ -53,6 +59,7 @@ timeout
 ```
 Commands
 ---
+/voice setowner
 /voice admin add
 /voice admin remove
 /voice kick
@@ -62,12 +69,9 @@ Commands
 /voice whitelist toggle
 /voice whitelist add
 /voice whitelist remove
-/voice manager create
-/voice manager delete
-/voice manager set
-/voice manager unset
-/voice manager rename
-/voice manager voicename
+/voicemanager set
+/voicemanager unset
+/voicemanager voicename
 
 Functions
 ---

@@ -1,7 +1,32 @@
 {
   "general": null,
-  "level": null,
-  "moderation": null,
+  "level": {
+    "866044524349095996": {
+      "levelUpChannelId": "1232652453195943987",
+      "levelRoles": {
+        "1": "1138699390383570965",
+        "10": "1163493797196468314",
+        "20": "1163494381731446855",
+        "30": "1163494661642530936",
+        "40": "1163494910289264772",
+        "50": "1163495178787627018",
+        "60": "1163495571806490784",
+        "70": "1163495823217262612",
+        "80": "1163496164151283793",
+        "90": "1163496564686336140",
+        "100": "1163497189964779530"
+      },
+      "voiceChannels": {
+        "1262206684202274827": ["547433425167188006"]
+      }
+    }
+  },
+  "moderation": {
+    "866044524349095996": {
+      "logChannelId": "1261405944789729411",
+      "modroleIds": []
+    }
+  },
   "support": null,
   "voice": null,
   "welcome": {
@@ -14,5 +39,63 @@
       "mainChannelId": "1204232133141467148"
     }
   },
-  "guilds": null
+  "sport": null,
+  "guilds": {
+    "866044524349095996": {
+      "547433425167188006": {
+        "name": "exdna",
+        "points": 394,
+        "level": 22,
+        "cooldown": false
+      },
+      "300307734832611328": {
+        "name": "leonbtww",
+        "points": 20,
+        "level": 1,
+        "cooldown": false
+      },
+      "704603780653645835": {
+        "name": "kayuwukii",
+        "points": 80,
+        "level": 1,
+        "cooldown": false
+      },
+      "1258073900252663848": {
+        "name": "cookies_beste_freundin",
+        "points": 40,
+        "level": 1,
+        "cooldown": false
+      },
+      "297433635618029569": {
+        "name": "tresencia",
+        "points": 30,
+        "level": 1,
+        "cooldown": false
+      },
+      "797803262400528394": {
+        "name": "maidyuno",
+        "points": 40,
+        "level": 1,
+        "cooldown": false
+      },
+      "707546212609294427": {
+        "name": "thk1910",
+        "points": 10,
+        "level": 1,
+        "cooldown": false
+      },
+      "1055269700277370891": {
+        "name": "mqjus",
+        "points": 10,
+        "level": 1,
+        "cooldown": false
+      },
+      "616631253365555210": {
+        "name": "shadow__1893",
+        "points": 30,
+        "level": 1,
+        "cooldown": false
+      }
+    }
+  }
 }

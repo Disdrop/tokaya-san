@@ -3,7 +3,7 @@
   "botId": "1138481259039965206",
   "modules": {
     "general": true,
-    "level": false,
+    "level": true,
     "moderation": false,
     "support": false,
     "voice": false,
