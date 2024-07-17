@@ -1,4 +1,4 @@
-import { Guild, TextChannel, User, userMention } from "discord.js";
+import { Guild, TextChannel, User } from "discord.js";
 import { TokayaClient } from "../../tokaya-client";
 import set from "./commands/set";
 import pointsOnMessage from "./events/pointsOnMessage";
@@ -56,10 +56,10 @@ function addPoints(member: User, guild: Guild, client: TokayaClient, points: num
 
 async function cooldown(userId: string, guildId: string, client: TokayaClient) {
   client.data.guilds[guildId][userId].cooldown = true;
-  client.write();
+  await client.write();
   await new Promise((resolve) => setTimeout(resolve, 10000));
   client.data.guilds[guildId][userId].cooldown = false;
-  client.write();
+  await client.write();
 }
 
 async function checkLevelUpdate(userId: string, guild: Guild, client: TokayaClient) {
@@ -78,7 +78,7 @@ async function checkLevelUpdate(userId: string, guild: Guild, client: TokayaClie
   if (user.points < levelXpLimit || !channel || !(channel instanceof TextChannel)) return;
   user.points -= levelXpLimit;
   user.level++;
-  client.write();
+  await client.write();
   //channel.send({ content: `<@${userId}>`, embeds: client.embeds.levelUp(user.level) });
 
   // Test for new Level Role
@@ -110,7 +110,7 @@ async function voicePoints(member: User, guild: Guild, channelId: string, client
           : client.data.level[guild.id].voiceChannels[channelId].length;
       client.modules.level.addPoints(member, guild, client, 5 * multiplyer);
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      client.modules.level.voicePoints(member, guild, channelId, client);
+      await client.modules.level.voicePoints(member, guild, channelId, client);
     }
   }
 }

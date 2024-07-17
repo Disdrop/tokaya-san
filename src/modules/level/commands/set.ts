@@ -1,6 +1,5 @@
 import {
   ChannelType,
-  Guild,
   PermissionFlagsBits,
   Role,
   SlashCommandBuilder,
@@ -60,7 +59,7 @@ const set: Command = {
           content: `\`levelUpChannelId\` was successfully assigned to <#${levelUpChannel.id}>`,
           ephemeral: true,
         });
-        client.write();
+        await client.write();
         break;
       case "levelrole":
         let level = interaction.options.getNumber("level");
@@ -89,7 +88,7 @@ const set: Command = {
           content: `Level \`${level}\` was successfully assigned to <@&${role.id}>`,
           ephemeral: true,
         });
-        client.write();
+        await client.write();
     }
   },
 };

@@ -41,7 +41,7 @@ const logchannel: Command = {
           content: `\`logChannelId\` was successfully assigned to <#${channel.id}>`,
           ephemeral: true,
         });
-        client.write();
+        await client.write();
         break;
       case "unset":
         if (!interaction.guildId) return;
@@ -62,7 +62,7 @@ const logchannel: Command = {
           content: `\`logChannelId\` was successfully unset`,
           ephemeral: true,
         });
-        client.write();
+        await client.write();
         break;
     }
   },

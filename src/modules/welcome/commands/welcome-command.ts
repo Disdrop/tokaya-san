@@ -55,7 +55,7 @@ const welcome: Command = {
           content: `\`${channelType}Id\` was successfully assigned to <#${channel.id}>`,
           ephemeral: true,
         });
-        client.write();
+        await client.write();
         break;
     }
   },

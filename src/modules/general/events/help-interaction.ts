@@ -1,12 +1,10 @@
 import {
   ActionRowBuilder,
-  ActivityType,
   Events,
-  SlashCommandBuilder,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
 } from "discord.js";
-import { BotEvent, Command } from "../../../lib/types";
+import { BotEvent } from "../../../lib/types";
 
 const helpInteraction: BotEvent = {
   async eventFunction(client) {

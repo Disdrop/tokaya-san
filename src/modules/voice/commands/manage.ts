@@ -4,8 +4,6 @@ import {
   SlashCommandSubcommandBuilder,
   SlashCommandSubcommandGroupBuilder,
   GuildMember,
-  Colors,
-  EmbedBuilder,
   PermissionFlagsBits,
 } from "discord.js";
 
@@ -201,11 +199,11 @@ export const voiceCommand: Command = {
               .filter((member) => !member.user.bot)
               .map((member) => member);
 
-            memberOfChannel.forEach(async (member) => {
-              await currentChannel.permissionOverwrites.edit(member, {
+            for (const member1 of memberOfChannel) {
+              await currentChannel.permissionOverwrites.edit(member1, {
                 Connect: true,
               });
-            });
+            }
 
             await currentChannel.permissionOverwrites.edit(member.guild.roles.everyone, {
               Connect: false,

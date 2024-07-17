@@ -1,4 +1,4 @@
-import { PermissionFlagsBits, SlashCommandBuilder, User, GuildMember } from "discord.js";
+import { PermissionFlagsBits, SlashCommandBuilder, GuildMember } from "discord.js";
 import { Command } from "../../../lib/types";
 
 const user: Command = {
@@ -23,7 +23,7 @@ const user: Command = {
     let user = interaction.options.getUser("user");
     switch (interaction.options.getSubcommand()) {
       case "ban":
-        if (!user || !(user instanceof User)) return;
+        if (!user) return;
 
         //TODO: check if the defined user is bannable (not an admin or modrole)
         //TODO: maybe extract the admin/modrole check to moderation and call it from here
@@ -38,7 +38,7 @@ const user: Command = {
 
         if (isAdmin || hasModRole) {
           //TODO: execute the ban
-          client.modules.moderation.writeLogEntry(interaction, client);
+          await client.modules.moderation.writeLogEntry(interaction, client);
           await interaction.reply({
             content: `\`user\` <@${user.id}> has (not) been banned`,
             ephemeral: true,

@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, TextChannel, User } from "discord.js";
+import { ChatInputCommandInteraction, TextChannel } from "discord.js";
 import { TokayaClient } from "../../tokaya-client";
 import logchannel from "./commands/logchannel";
 import modroles from "./commands/modroles";
@@ -14,7 +14,7 @@ async function writeLogEntry(interaction: ChatInputCommandInteraction, client: T
   const channel = client.channels.cache.get(
     client.data.moderation[interaction.guildId]["logChannelId"]
   ) as TextChannel;
-  channel.send({ embeds: client.embeds.logEntry(interaction) });
+  await channel.send({embeds: client.embeds.logEntry(interaction)});
 }
 
 const moderation = {

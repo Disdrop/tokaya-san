@@ -37,7 +37,7 @@ const join: BotEvent = {
           member.roles.add(role);
         });
         delete client.data.guilds[member.guild.id][member.id].rolesAtLeave;
-        client.write();
+        await client.write();
       }
     });
   },

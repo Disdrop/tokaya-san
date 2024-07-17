@@ -2,7 +2,6 @@ import { TokayaClient } from "../../tokaya-client";
 import join from "./events/join";
 import leave from "./events/leave";
 import welcomeSetup from "./commands/welcome-command";
-import { Events } from "discord.js";
 
 async function startModule(client: TokayaClient) {
   console.log('Starting "welcome" module');

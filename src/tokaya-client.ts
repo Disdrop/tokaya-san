@@ -6,11 +6,6 @@ import {
   RESTPostAPIChatInputApplicationCommandsJSONBody,
   REST,
   Routes,
-  ActionRowBuilder,
-  BaseSelectMenuBuilder,
-  StringSelectMenuBuilder,
-  StringSelectMenuOptionBuilder,
-  Guild,
   ActivityType,
 } from "discord.js";
 import { config as dotenv } from "dotenv";
@@ -89,7 +84,7 @@ export class TokayaClient extends Client {
     this.on(Events.ClientReady, async (client) => {
       if (!this.config || !this.user) return;
       console.log(`[Discord] Online als ${client.user.tag}`);
-      (async () => {
+      await (async () => {
         if (!this.config) return;
         const guild = this.guilds.cache.get(this.config.serverId);
         if (!guild) return;

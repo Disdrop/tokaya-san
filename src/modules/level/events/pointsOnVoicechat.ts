@@ -44,13 +44,13 @@ const pointsOnVoicechat: BotEvent = {
             voiceNew.member.id
           );
         }
-        client.modules.level.voicePoints(
-          voiceNew.member.user,
-          voiceNew.guild,
-          voiceNew.channelId,
-          client
+        await client.modules.level.voicePoints(
+            voiceNew.member.user,
+            voiceNew.guild,
+            voiceNew.channelId,
+            client
         );
-        client.write();
+        await client.write();
       }
       if (voiceOld.channelId) {
         if (
@@ -85,7 +85,7 @@ const pointsOnVoicechat: BotEvent = {
           if (Object.keys(client.data.level).length === 0) {
             client.data.level = null;
           }
-          client.write();
+          await client.write();
         }
       }
     });

@@ -37,7 +37,7 @@ const leave: BotEvent = {
       } else {
         client.data.guilds[client.config.serverId][member.id].rolesAtLeave = leaveRoles;
       }
-      client.write();
+      await client.write();
     });
   },
 };

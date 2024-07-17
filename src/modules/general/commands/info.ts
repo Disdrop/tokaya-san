@@ -1,7 +1,5 @@
 import {
-  GuildMember,
   SlashCommandBuilder,
-  APIInteractionDataResolvedGuildMember,
 } from "discord.js";
 import { Command } from "../../../lib/types";
 
@@ -23,20 +21,20 @@ const info: Command = {
       case "user":
         const user = await interaction.options.getUser("user")?.fetch();
         if (user) {
-          interaction.reply({
+          await interaction.reply({
             embeds: await client.embeds.generalInfoUser(user, client),
             fetchReply: true,
           });
           return;
         }
-        interaction.reply({
+        await interaction.reply({
           embeds: await client.embeds.generalInfoUser(await interaction.user.fetch(), client),
           fetchReply: true,
         });
         break;
       case "server":
         if (!interaction.guild) return;
-        interaction.reply({
+        await interaction.reply({
           embeds: await client.embeds.generalInfoServer(await interaction.guild.fetch(), client),
           fetchReply: true,
         });

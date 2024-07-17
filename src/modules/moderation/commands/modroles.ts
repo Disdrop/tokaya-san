@@ -40,7 +40,7 @@ const modrole: Command = {
         } else if (!client.data.moderation[interaction.guildId]["modroleIds"]) {
           client.data.moderation[interaction.guildId]["modroleIds"] = [role.id];
         } else if (client.data.moderation[interaction.guildId]["modroleIds"].includes(role.id)) {
-          client.write();
+          await client.write();
           await interaction.reply({
             content: `\`modrole\` <@&${role.id}> has already been added`,
             ephemeral: true,
@@ -49,7 +49,7 @@ const modrole: Command = {
         } else {
           client.data.moderation[interaction.guildId]["modroleIds"].push(role.id);
         }
-        client.write();
+        await client.write();
         await interaction.reply({
           content: `\`modrole\` <@&${role.id}> was successfully added`,
           ephemeral: true,
@@ -87,7 +87,7 @@ const modrole: Command = {
           });
         }
 
-        client.write();
+        await client.write();
         break;
     }
   },
